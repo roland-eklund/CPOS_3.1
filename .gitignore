@@ -1,2 +1,10 @@
-*.c
-*.md
+# Ignore everything
+*
+
+# But do not ignore C and Markdown files
+!*.c
+!*.md
+
+# Also do not ignore the .gitignore file itself
+!.gitignore
+
