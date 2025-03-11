@@ -15,8 +15,8 @@ void *philosopher(void *arg) {
     sleep(rand() % 3); // Simulate thinking time
 
     //::: DEADLOCK CAUSING CODE ::::
-    // Instead of every other philosophers picking hand first, all start with
-    // the same hand.
+    // Instead of every other philosophers picking "left hand" first, all start with the same hand.
+    // To compile with ThreadSanitizer run: clang -fsanitize=thread -g -o program program.c -pthread
     pthread_mutex_lock(&forks[(id + 1) % NUM_PHILOSOPHERS]); // Pick left fork
     pthread_mutex_lock(&forks[id]);                          // Pick right fork
 
