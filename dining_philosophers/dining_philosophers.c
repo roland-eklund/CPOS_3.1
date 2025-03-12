@@ -18,10 +18,11 @@
 
 #define NUM_PHILOSOPHERS 5
 #define ROUNDS 200
-#define MONITOR_INTERVAL 20 // in milliseconds
-#define TIME_UNTIL_DEAD 20
+#define MONITOR_INTERVAL 7 // in milliseconds
+#define TIME_UNTIL_DEAD 5
 
-pthread_mutex_t forks[NUM_PHILOSOPHERS]; // semaphore array
+pthread_mutex_t forks[NUM_PHILOSOPHERS];
+pthread_mutex_t monitor_lock = PTHREAD_MUTEX_INITIALIZER;
 
 struct PhilData {
   int phil_id;
@@ -32,40 +33,44 @@ struct PhilData {
 };
 
 struct PhilData phil_data[NUM_PHILOSOPHERS]; // Each phil gets its own struct
+                                             // and each struct is stored here
 
-void *data_monitor(){
+void *data_monitor() {
   while (1) {
     usleep(MONITOR_INTERVAL * 1e3);
+    pthread_mutex_lock(&monitor_lock);
 
-    for (int i = 0; i < NUM_PHILOSOPHERS; i++){
-      int elapsed_time = (phil_data[i].end_time.tv_nsec - phil_data[i].start_time.tv_nsec)/1e3;
-      if (elapsed_time > TIME_UNTIL_DEAD){
+    for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+      int elapsed_time =
+          (phil_data[i].end_time.tv_sec - phil_data[i].start_time.tv_sec) * 1e6 
+            +
+          (phil_data[i].end_time.tv_nsec - phil_data[i].start_time.tv_nsec) / 1e3;
+
+      if (elapsed_time > TIME_UNTIL_DEAD) {
         phil_data[i].is_dead = 1;
       }
     }
+    pthread_mutex_unlock(&monitor_lock);
   }
-  
 }
-                                             // and each struct is stored here
+
 void *philosopher(void *arg) {
   struct PhilData *data = (struct PhilData *)arg;
   data->rounds = 0;
   data->is_dead = 0;
 
   while (data->rounds < ROUNDS && data->is_dead != 1) {
-    usleep(1);
+    usleep(100);
     // printf("Philosopher %d is waiting..", data->phil_id);
     clock_gettime(CLOCK_MONOTONIC, &data->start_time);
-    if (data->phil_id % 2 == 0){
-    // Grab a fork (left)
-    pthread_mutex_lock(&forks[data->phil_id]);
-    // Grab a fork (right)
-    pthread_mutex_lock(&forks[(data->phil_id + 1) % NUM_PHILOSOPHERS]);
-    }else {
-    // Grab a fork (right)
-    pthread_mutex_lock(&forks[(data->phil_id + 1) % NUM_PHILOSOPHERS]);
-    // Grab a fork (left)
-    pthread_mutex_lock(&forks[data->phil_id]);
+    if ((data->phil_id % 2) == 0) {
+      // Grab left fork first
+      pthread_mutex_lock(&forks[data->phil_id]);
+      pthread_mutex_lock(&forks[(data->phil_id + 1) % NUM_PHILOSOPHERS]);
+    } else {
+      // Grab right fork first
+      pthread_mutex_lock(&forks[(data->phil_id + 1) % NUM_PHILOSOPHERS]);
+      pthread_mutex_lock(&forks[data->phil_id]);
     }
     clock_gettime(CLOCK_MONOTONIC, &data->end_time);
     // printf("philosopher %d is eating", id);
@@ -88,7 +93,6 @@ int main() {
     pthread_mutex_init(&forks[i], NULL);
   }
 
-
   for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
     phil_data[i].phil_id = i;
     phil_data[i].rounds = 0;
@@ -97,31 +101,31 @@ int main() {
 
   pthread_create(&monitor, NULL, data_monitor, NULL);
 
-  for (int i = 0; i < NUM_PHILOSOPHERS; i++){
-
-  pthread_join(philosophers[i], NULL);
+  for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+    pthread_join(philosophers[i], NULL);
   }
-
+  pthread_cancel(monitor);
 
   // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: //
   // Philosophers stats:
   printf("\n\n::: Philosophers stats :::");
-  for (int i = 0; i < NUM_PHILOSOPHERS; i++){
-    printf("\nPhilosopher id: %d, ",phil_data[i].phil_id);
-    printf("did %d rounds and ",phil_data[i].rounds);
-    if (phil_data[i].is_dead == 0){
-    printf("did not die.");
-    }else{
-    printf("died.");
-    }}
+  for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+    printf("\nPhilosopher id: %d, ", phil_data[i].phil_id);
+    printf("did %d rounds and ", phil_data[i].rounds);
+    if (phil_data[i].is_dead == 0) {
+      printf("did not die.");
+    } else {
+      printf("died.");
+    }
+  }
 
   // Summarized stats:
   int rounds = 0;
-  int deaths;
-  for (int i = 0; i < NUM_PHILOSOPHERS; i++){
-      rounds += phil_data[i].rounds;
-      deaths += phil_data[i].is_dead;
-    }
+  int deaths = 0;
+  for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+    rounds += phil_data[i].rounds;
+    deaths += phil_data[i].is_dead;
+  }
   printf("\n\n::: Summarized stats :::");
   printf("\nAverage rounds: %d", (rounds / NUM_PHILOSOPHERS));
   printf("\nTotal deaths: %d\n\n", deaths);
