@@ -4,7 +4,8 @@
 ### Included files:
  1. README
  2. producer_consumer.c 
- 3. readers_writers_problem.c 
+ 3. readers_writers_problem.c
+ 4. dining_philosophers/dining_philosophers.c
 
  | file  | content | author | comment |
  | ------| ------- | ------ | ------- |
