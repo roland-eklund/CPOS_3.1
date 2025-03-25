@@ -11,30 +11,25 @@ This is a repo for the coding exercises in assignment 3.1
  | file4 | comment |    | |
 
 
+
+###
 ## 2. producer_cousumer.c
 Here you find the implementation of the producer-Consumer problem with multiple producers and a single consumer (Variation A):
 
 ### Explanation 
 
 #### 1. Producer: 
-
    - Generates random items and adds them to the buffer. 
-
    - Uses `sem_wait(&empty)` to wait for an empty slot and `pthread_mutex_lock(&mutex)` to protect the buffer. 
 
 #### 2. Consumer: 
-
    - Retrieves items from the buffer and prints them. 
-
    - Uses `sem_wait(&full)` to wait for a filled slot and `pthread_mutex_lock(&mutex)` to protect the buffer. 
 
 #### 3. Synchronization: 
-
    - Semaphores (`empty` and `full`) manage buffer slots. 
-
    - Mutex ensures mutual exclusion for buffer access. 
 
- 
 #### Testing and Debugging  
 ##### Console Output: 
 ```
@@ -47,9 +42,7 @@ Here you find the implementation of the producer-Consumer problem with multiple 
 ```
 
 ##### Debugging: 
-
 Use ThreadSanitizer to detect race conditions: 
-
 ``` 
     clang -fsanitize=thread -o producer_consumer producer_consumer.c -pthread 
 ``` 
