@@ -5,7 +5,7 @@ This is a repo for the coding exercises in assignment 3.1
 
  | file     | content   | author    | comment   |
  | ------| ------- | ------ | -------|
- | README.md | Contents and instructions | Roland Eklund | |
+ | README.md | Contents and instructions | Whole group| |
  | producer_consumer.c | sample code | MD Hosen   | |
  | readers_writers_problem.c | Readers writers problem written in c | Roland | Written with AI and articles regading the problem. Geeks for geeks.com |
  | file4 | comment |    | |
