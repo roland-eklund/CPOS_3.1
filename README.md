@@ -2,10 +2,6 @@
 This is a repo for the coding exercises in assignment 3.1
 
 ## Included files:
- 1. README
- 2. producer_consumer.c 
- 3. readers_writers_problem.c
- 4. dining_philosophers/dining_philosophers.c
 
  | file     | content   | author    | comment   |
  | ------| ------- | ------ | -------|
@@ -42,11 +38,11 @@ Here you find the implementation of the producer-Consumer problem with multiple 
 #### Testing and Debugging  
 ##### Console Output: 
 ```
-  Producer 1 produced item: 42 
-  Producer 2 produced item: 17 
-  Consumer consumed item: 17 
-  Producer 3 produced item: 56 
-  Consumer consumed item: 56 
+    Producer 1 produced item: 42 
+    Producer 2 produced item: 17 
+    Consumer consumed item: 17 
+    Producer 3 produced item: 56 
+    Consumer consumed item: 56 
   ...
 ```
 
@@ -59,6 +55,6 @@ Use ThreadSanitizer to detect race conditions:
 ``` 
 To run the program run this command:
 ``` 
-./producer_consumer
+    ./producer_consumer
 ``` 
 
