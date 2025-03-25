@@ -39,7 +39,7 @@ Explanation
 
  
 #### Testing and Debugging  
-#####Console Output: 
+##### Console Output: 
 ```
   Producer 1 produced item: 42 
   Producer 2 produced item: 17 
@@ -49,19 +49,15 @@ Explanation
   ...
 ```
 
-#####Debugging: 
+##### Debugging: 
 
   - Use ThreadSanitizer to detect race conditions: 
 
 ``` 
     clang -fsanitize=thread -o producer_consumer producer_consumer.c -pthread 
 ``` 
+To run the program run this command:
 ``` 
-    
 ./producer_consumer
 ``` 
 
-
-=======
-| file 5 | comment | | |
->>>>>>> origin/main
