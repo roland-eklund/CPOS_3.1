@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+// MAIN ISSUES ::: Consumer always consumes the latest item produced, this leads to thread starvation for the writers.
+
 #define BUFFER_SIZE 5
 
 int buffer[BUFFER_SIZE]; // Shared buffer
