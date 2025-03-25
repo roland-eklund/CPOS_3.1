@@ -1,7 +1,7 @@
-## Cpos - 3.1
+# Cpos - 3.1
 This is a repo for the coding exercises in assignment 3.1
 
-### Included files:
+## Included files:
  1. README
  2. producer_consumer.c 
  3. readers_writers_problem.c
@@ -15,23 +15,24 @@ This is a repo for the coding exercises in assignment 3.1
  | file4 | comment |    | |
 
 
-### 2. producer_cousumer
+## 2. producer_cousumer.c
 Here you find the implementation of the producer-Consumer problem with multiple producers and a single consumer (Variation A):
-Explanation 
 
-1. Producer: 
+### Explanation 
+
+#### 1. Producer: 
 
    - Generates random items and adds them to the buffer. 
 
    - Uses `sem_wait(&empty)` to wait for an empty slot and `pthread_mutex_lock(&mutex)` to protect the buffer. 
 
-2. Consumer: 
+#### 2. Consumer: 
 
    - Retrieves items from the buffer and prints them. 
 
    - Uses `sem_wait(&full)` to wait for a filled slot and `pthread_mutex_lock(&mutex)` to protect the buffer. 
 
-3.Synchronization: 
+#### 3. Synchronization: 
 
    - Semaphores (`empty` and `full`) manage buffer slots. 
 
@@ -51,7 +52,7 @@ Explanation
 
 ##### Debugging: 
 
-  - Use ThreadSanitizer to detect race conditions: 
+Use ThreadSanitizer to detect race conditions: 
 
 ``` 
     clang -fsanitize=thread -o producer_consumer producer_consumer.c -pthread 
